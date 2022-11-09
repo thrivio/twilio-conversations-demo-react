@@ -1,3 +1,5 @@
+# UPDATE JB: Changed a few things so we can use firebase auth login with our backend token server
+
 # Conversations Demo Web Application Overview
 
 SDK version of this demo app: ![](https://img.shields.io/badge/SDK%20version-2.0.0-blue.svg)

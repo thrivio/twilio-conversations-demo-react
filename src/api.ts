@@ -22,6 +22,8 @@ import { NotificationsType } from "./store/reducers/notificationsReducer";
 import { successNotification, unexpectedErrorNotification } from "./helpers";
 import { getSdkMessageObject } from "./conversations-objects";
 import { ReduxParticipant } from "./store/reducers/participantsReducer";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "./firebase";
 
 type ParticipantResponse = ReturnType<typeof Conversation.prototype.add>;
 
@@ -112,11 +114,20 @@ export async function getToken(
   }
 
   try {
-    const response = await axios.get(requestAddress, {
-      params: { identity: username, password: password },
+    const authInstance = getAuth(app);
+    const user = await signInWithEmailAndPassword(
+      authInstance,
+      username,
+      password
+    );
+    const token = await user.user.getIdToken();
+    const response = await axios.get("http://localhost:8080/twilio/token", {
+      headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
+    console.error("ERROR", error);
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       return Promise.reject(error.response.data ?? "Authentication error.");
     }

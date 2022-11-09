@@ -3,8 +3,6 @@ import "firebase/compat/messaging";
 import { Client, PushNotification } from "@twilio/conversations";
 
 export const initFcmServiceWorker = async (): Promise<void> => {
-  firebase.initializeApp((window as any).firebaseConfig);
-
   try {
     const registration = await navigator.serviceWorker.register(
       "firebase-messaging-sw.js"
